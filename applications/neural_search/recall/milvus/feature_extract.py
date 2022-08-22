@@ -28,6 +28,8 @@ from paddlenlp.utils.log import logger
 sys.path.append('.')
 
 from data import convert_example
+os.environ['FLAGS_eager_delete_tensor_gb'] = "0.0"
+os.environ['FLAGS_fraction_of_gpu_memory_to_use'] = "1.0"
 
 # yapf: disable
 parser = argparse.ArgumentParser()
@@ -35,6 +37,8 @@ parser.add_argument("--model_dir", type=str, required=True,
     help="The directory to static model.")
 parser.add_argument("--corpus_file", type=str, required=True,
     help="The corpus_file path.")
+parser.add_argument("--out_dir", type=str, required=True,
+    help="The output path.")
 parser.add_argument("--max_seq_length", default=64, type=int,
     help="The maximum total input sequence length after tokenization. Sequences "
     "longer than this will be truncated, sequences shorter will be padded.")
@@ -114,7 +118,7 @@ class Predictor(object):
         self.output_handle = self.predictor.get_output_handle(
             self.predictor.get_output_names()[0])
 
-    def predict(self, data, tokenizer):
+    def predict(self, data, tokenizer, out_dir):
         """
         Predicts the data labels.
 
@@ -157,7 +161,7 @@ class Predictor(object):
             logits = self.output_handle.copy_to_cpu()
             all_embeddings.append(logits)
         all_embeddings = np.concatenate(all_embeddings, axis=0)
-        np.save('corpus_embedding', all_embeddings)
+        np.save(out_dir, all_embeddings)
 
 
 def read_text(file_path):
@@ -173,8 +177,8 @@ if __name__ == "__main__":
                           args.batch_size, args.use_tensorrt, args.precision,
                           args.cpu_threads, args.enable_mkldnn)
 
-    tokenizer = AutoTokenizer.from_pretrained('ernie-1.0')
+    tokenizer = AutoTokenizer.from_pretrained('ernie-3.0-medium-zh')
     id2corpus = read_text(args.corpus_file)
 
     corpus_list = [{idx: text} for idx, text in id2corpus.items()]
-    predictor.predict(corpus_list, tokenizer)
+    predictor.predict(corpus_list, tokenizer, args.out_dir)

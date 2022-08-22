@@ -60,9 +60,9 @@ parser.add_argument('--log_steps', type=int, default=10,
 parser.add_argument("--train_set_file", type=str,
                     default='./recall/train.csv',
                     help="The full path of train_set_file.")
-parser.add_argument("--dev_set_file", type=str,
-                    default='./recall/dev.csv',
-                    help="The full path of dev_set_file.")
+# parser.add_argument("--dev_set_file", type=str,
+#                     default='./recall/dev.csv',
+#                     help="The full path of dev_set_file.")
 parser.add_argument("--margin", default=0.2, type=float,
                     help="Margin beteween pos_sample and neg_samples")
 parser.add_argument("--scale", default=30, type=int,

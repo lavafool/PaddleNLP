@@ -34,6 +34,10 @@ import time
 from model import SimCSE
 from data import read_simcse_text, read_text_pair, convert_example, create_dataloader
 
+os.environ['FLAGS_eager_delete_tensor_gb'] = "0.0"
+os.environ['FLAGS_fraction_of_gpu_memory_to_use'] = "1.0"
+os.environ['FLAGS_use_cuda_managed_memory'] = "false"
+
 # yapf: disable
 parser = argparse.ArgumentParser()
 parser.add_argument("--save_dir", default='./checkpoint', type=str, help="The output directory where the model checkpoints will be written.")

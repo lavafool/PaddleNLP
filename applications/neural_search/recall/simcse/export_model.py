@@ -28,12 +28,13 @@ from model import SimCSE
 parser = argparse.ArgumentParser()
 parser.add_argument("--params_path", type=str, required=True, default='./checkpoint/model_900/model_state.pdparams', help="The path to model parameters to be loaded.")
 parser.add_argument("--output_path", type=str, default='./output', help="The path of model parameter in static graph to be saved.")
+parser.add_argument("--output_emb_size", type=int, default=256, help="The output size of embedding.")
 args = parser.parse_args()
 # yapf: enable
 
 if __name__ == "__main__":
     # If you want to use ernie1.0 model, plesace uncomment the following code
-    output_emb_size = 256
+    output_emb_size = args.output_emb_size
 
     pretrained_model = AutoModel.from_pretrained("ernie-3.0-medium-zh")
 

@@ -33,6 +33,8 @@ from base_model import SemanticIndexBase
 parser = argparse.ArgumentParser()
 parser.add_argument("--text_pair_file", type=str,
                     required=True, help="The full path of input file")
+parser.add_argument("--output_file", type=str,
+                    required=True, help="The full path of output file")
 parser.add_argument("--params_path", type=str, required=True,
                     help="The path to model parameters to be loaded.")
 parser.add_argument("--max_seq_length", default=64, type=int, help="The maximum total input sequence length after tokenization. "
@@ -122,5 +124,11 @@ if __name__ == "__main__":
 
     cosin_sim = predict(model, valid_data_loader)
 
-    for idx, cosine in enumerate(cosin_sim):
-        print('{}'.format(cosine))
+    raw_pairs = []
+    with open(args.text_pair_file, 'r') as in_f:
+        for line in in_f:
+            raw_pairs.append(line.rstrip())
+
+    with open(args.output_file, 'w') as out_f:
+        for idx, cosine in enumerate(cosin_sim):
+            out_f.write(raw_pairs[idx] + '\t{}\n'.format(cosine))
